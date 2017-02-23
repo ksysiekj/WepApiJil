@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using Microsoft.Owin.Security.OAuth;
+﻿using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Web.Http;
 
 namespace WepApiJil
 {
@@ -17,6 +14,8 @@ namespace WepApiJil
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
 
+            config.ConfigureJSONFormatter();
+
             // Web API routes
             config.MapHttpAttributeRoutes();
 
@@ -25,6 +24,19 @@ namespace WepApiJil
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+        }
+
+        private static void ConfigureJSONFormatter(this HttpConfiguration config)
+        {
+            config.Formatters.JsonFormatter.SerializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore,
+                DateFormatHandling = DateFormatHandling.IsoDateFormat
+            };
+
+            //config.Formatters.RemoveAt(0);
+            //config.Formatters.Insert(0, new JilMediaTypeFormatter());
         }
     }
 }

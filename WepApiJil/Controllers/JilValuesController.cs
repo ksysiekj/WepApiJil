@@ -1,9 +1,11 @@
 ﻿using System.Web.Http;
+using WepApiJil.Attributes;
 using WepApiJil.Services;
 
 namespace WepApiJil.Controllers
 {
-    public sealed class ValuesController : ApiController
+    [JilSerialization]
+    public sealed class JilValuesController : ApiController
     {
         // GET api/values
         public IHttpActionResult Get()
